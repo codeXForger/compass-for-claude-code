@@ -1,6 +1,6 @@
 {
   "name": "compass-for-claude-code",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Local web dashboard to view, edit, and generate Claude Code settings, skills, hooks, commands, agents, MCP servers, permissions, CLAUDE.md, and history for any project.",
   "keywords": [
     "claude",
