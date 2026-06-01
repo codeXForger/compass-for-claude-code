@@ -79,7 +79,7 @@ export function RephraseButton({ module, field, value, onApply }: Props) {
   );
 }
 
-function WandIcon() {
+export function WandIcon() {
   return (
     <svg
       className="h-3.5 w-3.5"

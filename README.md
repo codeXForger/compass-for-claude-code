@@ -13,14 +13,16 @@ Install once, run `ccc` inside any project, and a browser tab opens onto a unifi
 
 - **Dashboard** — at-a-glance project + Claude CLI status, resource counts, and a setup-health view
 - **Setup** — install/login guidance with an embedded terminal for `claude setup-token`
-- **CLAUDE.md** — view, edit, or generate from a prompt using your local `claude --print /init` (streamed live)
+- **CLAUDE.md** — view, edit, or generate from a prompt using your local `claude --print /init` (streamed live); a **Format & polish** wand rephrases and reformats your draft into clean Markdown, previewed as a side-by-side diff before you apply it
 - **Settings** — edit project (`.claude/settings.json`) and user (`~/.claude/settings.json`)
 - **Skills · Hooks · Commands · Agents** — full CRUD at both project and user scope
 - **MCP servers** — list, add, and remove (shells out to `claude mcp`)
 - **Permissions** — manage tool allow/deny lists with patterns
 - **Plugins · Tools · Files** — browse plugins, available tools, and project files
 - **Git** — current working-tree status for the project
-- **History** — browse past Claude sessions for the current project in a threaded view
+- **History** — browse past Claude sessions for the current project as a readable conversation (You / Claude) with plain-language, collapsible tool activity; a **Raw** toggle reveals the underlying JSON
+
+Every page shows the **target project's name** in the sidebar (full path on hover), so it's easy to tell apart multiple `ccc` instances open at once.
 
 Most resources have both a **project** scope (`<cwd>/.claude/`, `<cwd>/CLAUDE.md`, `<cwd>/.mcp.json`) and a **user** scope (`~/.claude/`). Project scope affects only the current project; user scope affects every project you open with Claude Code.
 

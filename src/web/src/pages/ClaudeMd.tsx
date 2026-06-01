@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
-import { apiGet, apiPut } from "../lib/api";
+import { apiGet, apiPost, apiPut } from "../lib/api";
 import { PageHeader } from "../components/PageHeader";
 import { ActionButton } from "../components/ActionButton";
+import { MarkdownDiff } from "../components/MarkdownDiff";
+import { WandIcon } from "../components/RephraseButton";
+import { useToast } from "../components/ToastProvider";
 
 interface ClaudeMdResponse {
   path: string;
@@ -19,6 +22,9 @@ export function ClaudeMd() {
   const [confirmGen, setConfirmGen] = useState(false);
   const [genOutput, setGenOutput] = useState("");
   const [variant, setVariant] = useState<Variant>("project");
+  const [formatting, setFormatting] = useState(false);
+  const [formatted, setFormatted] = useState<string | null>(null);
+  const toast = useToast();
 
   const endpoint = variant === "local" ? "/claudemd/local" : "/claudemd";
 
@@ -32,6 +38,7 @@ export function ClaudeMd() {
   // Reload whenever the active file (project vs local) changes.
   useEffect(() => {
     setData(null);
+    setFormatted(null);
     refresh();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [variant]);
@@ -40,6 +47,25 @@ export function ClaudeMd() {
     await apiPut(endpoint, { content: draft });
     setEditing(false);
     refresh();
+  }
+
+  // Magic wand: ask the local `claude` CLI to rephrase + reformat the current
+  // draft into clean Markdown, then preview it as a side-by-side diff.
+  async function format() {
+    if (formatting || !draft.trim()) return;
+    setFormatting(true);
+    try {
+      const r = await apiPost<{ text: string }>("/claudemd/format", {
+        content: draft,
+      });
+      setFormatted(r.text);
+    } catch (e) {
+      toast.error(
+        e instanceof Error ? e.message.replace(/^Error:\s*/, "") : String(e),
+      );
+    } finally {
+      setFormatting(false);
+    }
   }
 
   async function generate() {
@@ -133,8 +159,24 @@ export function ClaudeMd() {
             </div>
           ) : editing ? (
             <div className="flex gap-2">
-              <button className="btn-ghost" onClick={() => setEditing(false)}>
+              <button
+                className="btn-ghost"
+                onClick={() => {
+                  setEditing(false);
+                  setFormatted(null);
+                }}
+              >
                 Cancel
+              </button>
+              <button
+                className="btn-ghost inline-flex items-center gap-1.5"
+                onClick={format}
+                disabled={formatting || !draft.trim() || formatted !== null}
+                title="Rephrase & reformat as clean Markdown with Claude"
+                aria-busy={formatting}
+              >
+                <WandIcon />
+                {formatting ? "Polishing…" : "Format & polish"}
               </button>
               <ActionButton
                 onAction={save}
@@ -249,12 +291,24 @@ export function ClaudeMd() {
 
       {data.exists && !generating && (
         editing ? (
-          <textarea
-            className="field-mono h-[60vh] leading-relaxed"
-            value={draft}
-            onChange={(e) => setDraft(e.target.value)}
-            spellCheck={false}
-          />
+          formatted !== null ? (
+            <MarkdownDiff
+              before={draft}
+              after={formatted}
+              onApply={() => {
+                setDraft(formatted);
+                setFormatted(null);
+              }}
+              onDiscard={() => setFormatted(null)}
+            />
+          ) : (
+            <textarea
+              className="field-mono h-[60vh] leading-relaxed"
+              value={draft}
+              onChange={(e) => setDraft(e.target.value)}
+              spellCheck={false}
+            />
+          )
         ) : (
           <div className="card">
             <pre className="max-h-[70vh] overflow-auto whitespace-pre-wrap font-mono text-[13px] leading-relaxed text-ink">

@@ -15,7 +15,7 @@ interface Props {
 }
 
 /**
- * Atlas-style chapter heading: chapter number, eyebrow, display-serif title,
+ * Chapter heading: chapter number, eyebrow, display-serif title,
  * italic subtitle, mono meta line, and right-aligned actions.
  */
 export function PageHeader({

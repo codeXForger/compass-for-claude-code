@@ -76,7 +76,7 @@ export function ProgressSplash() {
           />
           <div className="card relative">
             <header className="mb-4 text-center">
-              <div className="eyebrow">An Atlas for Claude Code</div>
+              <div className="eyebrow">for Claude Code</div>
               <h1 className="font-display text-4xl text-ink">
                 Compass
               </h1>

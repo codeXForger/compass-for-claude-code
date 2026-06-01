@@ -116,3 +116,9 @@ export function getAuth(force = false): Promise<AuthStatus> {
 export function getDashboardSummary(): Promise<DashboardSummary> {
   return apiGet<DashboardSummary>("/dashboard/summary");
 }
+
+/** The target project's display name — the basename of its cwd. */
+export function projectNameFromCwd(cwd: string | undefined | null): string {
+  if (!cwd) return "";
+  return cwd.replace(/[/\\]+$/, "").split(/[/\\]/).pop() || cwd;
+}

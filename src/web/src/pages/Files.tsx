@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { apiGet } from "../lib/api";
+import { apiGet, projectNameFromCwd } from "../lib/api";
 import { PageHeader } from "../components/PageHeader";
 
 interface DirEntry {
@@ -43,14 +43,16 @@ export function Files() {
 
   if (!root) return <div className="text-muted">Loading…</div>;
 
+  const projectName = projectNameFromCwd(root.cwd);
+
   return (
     <div className="space-y-6">
       <PageHeader
         chapter="XIII"
-        eyebrow="Chapter · Files"
+        eyebrow={`Chapter · Files · ${projectName}`}
         title="The lay of the land"
         subtitle="browse the project tree — click a file to read it"
-        meta={root.cwd}
+        meta={`◉ ${projectName} — ${root.cwd}`}
       />
 
       <div className="grid grid-cols-1 gap-5 md:h-[calc(100vh-16rem)] md:grid-cols-3 md:grid-rows-[minmax(0,1fr)]">
