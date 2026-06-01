@@ -1,5 +1,10 @@
 # compass-for-claude-code
 
+[![npm version](https://img.shields.io/npm/v/compass-for-claude-code.svg)](https://www.npmjs.com/package/compass-for-claude-code)
+[![npm downloads](https://img.shields.io/npm/dm/compass-for-claude-code.svg)](https://www.npmjs.com/package/compass-for-claude-code)
+[![node](https://img.shields.io/node/v/compass-for-claude-code.svg)](https://www.npmjs.com/package/compass-for-claude-code)
+[![license](https://img.shields.io/npm/l/compass-for-claude-code.svg)](LICENSE)
+
 > A local web dashboard for every Claude Code project — inspect and edit settings, skills, hooks, commands, agents, MCP servers, permissions, `CLAUDE.md`, and session history from one UI.
 
 Install once, run `ccc` inside any project, and a browser tab opens onto a unified dashboard for that project's [Claude Code](https://claude.ai/code) configuration. Compass is a tool for *inspecting and managing other projects' Claude setups* — the target project is whatever directory you launch `ccc` in.
