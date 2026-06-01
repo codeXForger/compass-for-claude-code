@@ -1,0 +1,81 @@
+{
+  "name": "compass-for-claude-code",
+  "version": "0.1.0",
+  "description": "Local web dashboard to view, edit, and generate Claude Code settings, skills, hooks, commands, agents, MCP servers, permissions, CLAUDE.md, and history for any project.",
+  "keywords": [
+    "claude",
+    "claude-code",
+    "anthropic",
+    "dashboard",
+    "mcp",
+    "skills",
+    "hooks",
+    "cli"
+  ],
+  "license": "MIT",
+  "author": "nodexforger",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/codeXForger/compass-for-claude-code.git"
+  },
+  "homepage": "https://github.com/codeXForger/compass-for-claude-code#readme",
+  "bugs": {
+    "url": "https://github.com/codeXForger/compass-for-claude-code/issues"
+  },
+  "type": "module",
+  "bin": {
+    "ccc": "./bin/cli.js"
+  },
+  "files": [
+    "bin",
+    "dist",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev:server": "tsx watch --clear-screen=false src/cli.ts --port 4180 --no-open --cwd .",
+    "dev:web": "wait-on -t 30000 tcp:4180 && vite --config src/web/vite.config.ts",
+    "dev": "concurrently -k -n srv,web -c blue,magenta \"npm:dev:server\" \"npm:dev:web\"",
+    "build:web": "vite build --config src/web/vite.config.ts",
+    "build:server": "tsup",
+    "build": "npm run build:web && npm run build:server",
+    "start": "node bin/cli.js",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.13.7",
+    "commander": "^12.1.0",
+    "get-port": "^7.1.0",
+    "gray-matter": "^4.0.3",
+    "hono": "^4.6.14",
+    "open": "^10.1.0",
+    "ws": "^8.18.0"
+  },
+  "optionalDependencies": {
+    "node-pty": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "@types/react": "^18.3.17",
+    "@types/react-dom": "^18.3.5",
+    "@types/ws": "^8.5.13",
+    "@vitejs/plugin-react": "^4.3.4",
+    "@xterm/addon-fit": "^0.10.0",
+    "@xterm/xterm": "^5.5.0",
+    "autoprefixer": "^10.4.20",
+    "concurrently": "^9.1.0",
+    "postcss": "^8.4.49",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.28.0",
+    "tailwindcss": "^3.4.17",
+    "tsup": "^8.3.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.3",
+    "wait-on": "^9.0.10"
+  }
+}

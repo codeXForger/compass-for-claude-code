@@ -1,0 +1,366 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =========================================================================
+   ATLAS — Compass for Claude Code
+   A cartographic / editorial design system. Light = warm ivory parchment.
+   Dark = deep ink-night. Brass as the signature accent. Distinctive type:
+   Instrument Serif (display) · Geist (body) · Geist Mono (code).
+   ========================================================================= */
+
+:root,
+:root[data-theme="light"] {
+  /* ── Surfaces ── */
+  --page: 246 240 228;        /* warm ivory   #f6f0e4 */
+  --surface: 252 247 237;     /* parchment    #fcf7ed */
+  --elev: 255 252 245;        /* lifted card  #fffcf5 */
+  --sunken: 240 232 217;      /* recessed     #f0e8d9 */
+
+  /* ── Ink ── */
+  --ink: 32 28 22;            /* warm black   #201c16 */
+  --muted: 92 82 68;          /* sepia        #5c5244 */
+  --faint: 152 138 116;       /* faded ink    #988a74 */
+
+  /* ── Rules ── */
+  --rule: 218 206 184;        /* hairline     #dacef0  */
+  --rule-strong: 184 168 140; /* engraving    #b8a88c */
+
+  /* ── Accents ── */
+  --brass: 161 109 47;        /* aged brass   #a16d2f */
+  --brass-soft: 196 152 92;   /* polished     #c4985c */
+  --ink-on-brass: 252 247 237;
+  --sage: 70 110 88;          /* moss         #466e58 */
+  --brick: 158 60 50;         /* brick        #9e3c32 */
+  --ember: 178 110 36;        /* warm amber   #b26e24 */
+
+  --shadow: 60 40 18;
+  --bg-grain:
+    radial-gradient(circle at 20% 30%, rgba(120, 90, 50, 0.04) 0px, transparent 1px),
+    radial-gradient(circle at 70% 80%, rgba(120, 90, 50, 0.03) 0px, transparent 1px),
+    radial-gradient(circle at 45% 60%, rgba(120, 90, 50, 0.025) 0px, transparent 1px);
+  --bg-rose: none;
+}
+
+:root[data-theme="dark"] {
+  --page: 16 15 13;           /* ink night    #100f0d */
+  --surface: 22 20 17;        /* deep page    #161411 */
+  --elev: 28 25 21;           /* card         #1c1915 */
+  --sunken: 12 11 9;          /* recessed     #0c0b09 */
+
+  --ink: 236 228 212;         /* parchment    #ece4d4 */
+  --muted: 178 165 142;       /* faded brass  #b2a58e */
+  --faint: 120 108 90;        /* muted        #786c5a */
+
+  --rule: 50 44 36;           /* engraving    #322c24 */
+  --rule-strong: 88 76 60;    /* visible rule #584c3c */
+
+  --brass: 212 162 96;        /* warm brass   #d4a260 */
+  --brass-soft: 234 190 130;  /* polished     #eabe82 */
+  --ink-on-brass: 16 15 13;
+  --sage: 138 178 152;        /* moss         #8ab298 */
+  --brick: 212 110 92;        /* brick glow   #d46e5c */
+  --ember: 222 162 88;        /* lamp amber   #dea258 */
+
+  --shadow: 0 0 0;
+  --bg-grain:
+    radial-gradient(circle at 20% 30%, rgba(255, 230, 180, 0.025) 0px, transparent 1px),
+    radial-gradient(circle at 70% 80%, rgba(255, 230, 180, 0.02) 0px, transparent 1px),
+    radial-gradient(circle at 45% 60%, rgba(255, 230, 180, 0.015) 0px, transparent 1px);
+  --bg-rose: radial-gradient(
+    ellipse at top right,
+    rgba(212, 162, 96, 0.06),
+    transparent 60%
+  );
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+  html {
+    color-scheme: light dark;
+  }
+  body {
+    font-family: "Geist", ui-sans-serif, system-ui, -apple-system, sans-serif;
+    font-feature-settings: "ss01", "cv11";
+    background-color: rgb(var(--page));
+    color: rgb(var(--ink));
+    background-image: var(--bg-grain), var(--bg-rose);
+    background-size: 220px 220px, auto, auto;
+    background-attachment: fixed;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  code,
+  pre,
+  .font-mono {
+    font-family: "Geist Mono", ui-monospace, Menlo, monospace;
+    font-feature-settings: "ss01", "cv01";
+  }
+  .font-display {
+    font-family: "Instrument Serif", ui-serif, Georgia, serif;
+    letter-spacing: -0.01em;
+  }
+  ::selection {
+    background: rgb(var(--brass) / 0.28);
+    color: rgb(var(--ink));
+  }
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgb(var(--rule));
+    border-radius: 10px;
+    border: 2px solid rgb(var(--page));
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgb(var(--rule-strong));
+  }
+  input, textarea, select, button {
+    font-family: inherit;
+    color: inherit;
+  }
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible,
+  button:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px rgb(var(--page)), 0 0 0 3px rgb(var(--brass) / 0.6);
+  }
+}
+
+@layer components {
+  /* ── Surfaces ── */
+  .card {
+    @apply rounded-md border border-rule bg-elev p-5;
+    box-shadow: 0 1px 0 rgb(var(--rule) / 0.5), 0 12px 32px -24px rgb(var(--shadow) / 0.2);
+  }
+  .card-flat {
+    @apply rounded-md border border-rule bg-elev;
+  }
+  .card-sunken {
+    @apply rounded-md border border-rule bg-sunken;
+  }
+
+  /* ── Buttons ── */
+  .btn {
+    @apply inline-flex items-center justify-center gap-1.5 rounded-md px-3.5 py-2 text-[13px] font-medium tracking-tight transition-all;
+    line-height: 1;
+  }
+  .btn-primary {
+    @apply btn border bg-brass text-ink_on_brass border-brass;
+    box-shadow: 0 1px 0 rgb(var(--ink) / 0.04), 0 8px 18px -12px rgb(var(--brass) / 0.6);
+  }
+  .btn-primary:hover {
+    background: rgb(var(--brass-soft));
+    border-color: rgb(var(--brass-soft));
+  }
+  .btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  .btn-ghost {
+    @apply btn border border-rule bg-transparent text-ink hover:bg-sunken;
+  }
+  .btn-quiet {
+    @apply btn bg-transparent text-muted hover:bg-sunken hover:text-ink;
+  }
+  .btn-danger {
+    @apply btn border bg-transparent text-brick hover:bg-brick/10;
+    border-color: rgb(var(--brick) / 0.4);
+  }
+
+  /* ── Nav ── */
+  .nav-link {
+    @apply flex items-center gap-3 rounded-md px-3 py-2 text-[13px] text-muted transition-colors;
+    letter-spacing: 0.01em;
+  }
+  .nav-link:hover {
+    @apply bg-sunken text-ink;
+  }
+  .nav-link-active {
+    @apply text-ink;
+    background: rgb(var(--brass) / 0.08);
+    box-shadow: inset 2px 0 0 rgb(var(--brass));
+  }
+  .nav-link-active .nav-glyph {
+    color: rgb(var(--brass));
+  }
+  .nav-glyph {
+    @apply inline-flex h-5 w-5 items-center justify-center text-[11px] tracking-tight text-faint;
+    font-family: "Instrument Serif", serif;
+    font-style: italic;
+  }
+
+  /* ── Inputs ── */
+  .field {
+    @apply w-full rounded-md border border-rule bg-sunken px-3 py-2 text-[13px] text-ink placeholder:text-faint transition-colors;
+  }
+  .field:hover {
+    border-color: rgb(var(--rule-strong));
+  }
+  .field:focus-visible {
+    border-color: rgb(var(--brass));
+  }
+  .field-mono {
+    @apply field font-mono;
+  }
+  .label {
+    @apply mb-1.5 block text-[11px] font-medium uppercase tracking-atlas text-faint;
+  }
+
+  /* ── Editorial type ── */
+  .eyebrow {
+    @apply text-[11px] uppercase tracking-atlas text-faint;
+  }
+  .chapter-num {
+    @apply font-display text-2xl italic text-brass;
+    line-height: 1;
+  }
+  .display-title {
+    @apply font-display text-[44px] leading-none text-ink;
+    letter-spacing: -0.015em;
+  }
+  .display-subtitle {
+    @apply font-display italic text-lg text-muted;
+  }
+
+  /* ── Decorative rules ── */
+  .rule-dotted {
+    background-image: radial-gradient(circle, rgb(var(--rule-strong)) 1px, transparent 1.5px);
+    background-size: 6px 1px;
+    background-repeat: repeat-x;
+    background-position: center;
+    height: 1px;
+  }
+  .rule-tick {
+    position: relative;
+    height: 8px;
+  }
+  .rule-tick::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(
+      to right,
+      rgb(var(--rule-strong)) 0,
+      rgb(var(--rule-strong)) 1px,
+      transparent 1px,
+      transparent 12px
+    );
+    background-size: 12px 100%;
+    background-position: left bottom;
+    background-repeat: repeat-x;
+    height: 8px;
+    opacity: 0.5;
+  }
+
+  /* ── Badges / pills ── */
+  .pill {
+    @apply inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-medium tracking-tight;
+  }
+  .pill-brass {
+    @apply pill border-brass/40 bg-brass/10 text-brass;
+  }
+  .pill-sage {
+    @apply pill border-sage/40 bg-sage/10 text-sage;
+  }
+  .pill-brick {
+    @apply pill border-brick/40 bg-brick/10 text-brick;
+  }
+  .pill-ember {
+    @apply pill border-ember/40 bg-ember/10 text-ember;
+  }
+  .pill-quiet {
+    @apply pill border-rule text-muted;
+    background: rgb(var(--surface));
+  }
+
+  /* ── Code / pre ── */
+  .code-block {
+    @apply overflow-x-auto rounded-md border border-rule bg-sunken p-3 font-mono text-[12px] leading-relaxed text-ink;
+  }
+
+  /* ── Tabs ── */
+  .tab {
+    @apply inline-flex items-center gap-2 rounded-md px-3 py-1.5 text-[12px] font-medium text-muted transition-colors;
+  }
+  .tab:hover {
+    @apply bg-sunken text-ink;
+  }
+  .tab-active {
+    @apply text-ink;
+    background: rgb(var(--brass) / 0.12);
+    box-shadow: inset 0 -2px 0 rgb(var(--brass));
+  }
+
+  /* ── Status dots ── */
+  .dot {
+    @apply inline-block h-2 w-2 rounded-full;
+  }
+
+  /* ── Section header (chapter style) ── */
+  .chapter-header {
+    @apply flex items-baseline justify-between gap-6 border-b border-rule pb-5;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .animate-page-in {
+    animation: page-in 360ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+  .animate-fade-in {
+    animation: fade-in 300ms ease-out both;
+  }
+  .stagger-1 { animation-delay: 60ms; }
+  .stagger-2 { animation-delay: 120ms; }
+  .stagger-3 { animation-delay: 180ms; }
+  .stagger-4 { animation-delay: 240ms; }
+  .stagger-5 { animation-delay: 300ms; }
+
+  /* Decorative compass-rose SVG, used in shell and splash. */
+  .compass-rose {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200' fill='none' stroke='%23a16d2f' stroke-width='0.6' opacity='0.18'><circle cx='100' cy='100' r='80'/><circle cx='100' cy='100' r='60'/><circle cx='100' cy='100' r='30'/><path d='M100 20 L108 95 L100 100 L92 95 Z' fill='%23a16d2f'/><path d='M100 180 L108 105 L100 100 L92 105 Z' fill='%23a16d2f' opacity='0.4'/><path d='M20 100 L95 92 L100 100 L95 108 Z' fill='%23a16d2f' opacity='0.4'/><path d='M180 100 L105 92 L100 100 L105 108 Z' fill='%23a16d2f' opacity='0.4'/><line x1='100' y1='15' x2='100' y2='25'/><line x1='100' y1='175' x2='100' y2='185'/><line x1='15' y1='100' x2='25' y2='100'/><line x1='175' y1='100' x2='185' y2='100'/></svg>");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+  }
+}
+
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.animate-spin-slow {
+  animation: spin-slow 3s linear infinite;
+}
