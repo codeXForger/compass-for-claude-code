@@ -9,6 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Guided Permissions editor** — the Permissions page is now a single list where each
+  rule carries exactly one verdict (Allow / Ask / Deny) via a toggle, making it
+  structurally impossible to put the same pattern in two lists. A guided **Add a rule**
+  builder composes patterns from a plain-English tool picker with a contextual match
+  field and a live preview; **Quick add** presets cover common cases; and the list has
+  **search** plus **Allow/Ask/Deny filter** chips. If a loaded `settings.json` lists a
+  pattern under multiple verdicts, the strictest wins (deny > ask > allow) and a notice
+  invites a clean-up save. An **Advanced (raw)** toggle keeps the original three-textarea
+  editor for power users, round-tripping with the guided view.
 - **Format & polish for CLAUDE.md** — a magic-wand button in the CLAUDE.md /
   CLAUDE.local.md editor sends the current draft to the local `claude` CLI, which
   rephrases it and reformats it into clean Markdown (headings, lists, code fences,

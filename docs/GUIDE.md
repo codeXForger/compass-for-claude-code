@@ -296,15 +296,26 @@ launched by Claude Code and expose tools to the model.
 
 ## IX · Permissions
 
-**What it is.** A three-column editor (Allow / Ask / Deny) for the `permissions` block of
-`settings.json`, per scope. One pattern per line.
+**What it is.** A guided editor for the `permissions` block of `settings.json`, per scope.
+Each rule is a single row carrying exactly one verdict — Allow, Ask, or Deny — so the same
+pattern can never sit in two lists at once.
 
 **Why / purpose.** Controls which tool calls run without prompting, which prompt you
 first, and which are blocked outright. Patterns look like `Bash(git *)`, `Edit`, or
 `mcp__server`.
 
-**How to use.** Pick scope, type patterns into the three boxes (newline-separated),
-**Save**. Empty lines are trimmed.
+**How to use.** Pick scope. Use **Add a rule** to compose a pattern: choose a tool from the
+dropdown, optionally fill the contextual match field (e.g. `git *` for Bash), pick a verdict,
+**Add** — a live preview shows the resulting pattern. Or hit a **Quick add** preset. Flip a
+rule's verdict with its Allow/Ask/Deny toggle, or remove it with 🗑. Adding a pattern that
+already exists just changes its verdict instead of duplicating it. Then **Save**.
+
+If a loaded file already lists the same pattern under multiple verdicts, the strictest wins
+(deny > ask > allow) and a notice invites you to Save the cleaned-up version.
+
+**Advanced (raw).** Toggle to **Advanced** for the classic three textareas (one pattern per
+line) when you want to paste or bulk-edit patterns directly. Edits round-trip back to the
+guided view.
 
 **Impact.** Rewrites `permissions.allow/ask/deny`. **Precedence: deny > ask > allow.**
 This directly governs what Claude can do unattended.
