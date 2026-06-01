@@ -17,7 +17,7 @@ Install once, run `ccc` inside any project, and a browser tab opens onto a unifi
 - **Settings** — edit project (`.claude/settings.json`) and user (`~/.claude/settings.json`)
 - **Skills · Hooks · Commands · Agents** — full CRUD at both project and user scope
 - **MCP servers** — list, add, and remove (shells out to `claude mcp`)
-- **Permissions** — manage tool allow/deny lists with patterns
+- **Permissions** — a guided editor where each rule carries one verdict (Allow / Ask / Deny), so the same pattern can never end up in two lists. Compose rules from a plain-English tool picker with a live preview, use quick-add presets, or search and filter the list; an **Advanced (raw)** toggle keeps the classic three-textarea editor for power users
 - **Plugins · Tools · Files** — browse plugins, available tools, and project files
 - **Git** — current working-tree status for the project
 - **History** — browse past Claude sessions for the current project as a readable conversation (You / Claude) with plain-language, collapsible tool activity; a **Raw** toggle reveals the underlying JSON
