@@ -7,6 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Format & polish for CLAUDE.md** — a magic-wand button in the CLAUDE.md /
+  CLAUDE.local.md editor sends the current draft to the local `claude` CLI, which
+  rephrases it and reformats it into clean Markdown (headings, lists, code fences,
+  spacing). The result is shown as a side-by-side **Before / After** diff with
+  **Apply** / **Discard**, so nothing changes until you accept it.
+- **Readable conversation history** — the History page now renders past sessions as
+  a plain-language conversation (You / Claude) instead of raw JSON. Tool steps show
+  as collapsible plain-language rows ("Ran a command", "Read a file", "Searched the
+  code") that expand to the exact input and result, and internal events are filtered
+  out. A **Raw** toggle keeps the original JSON view one click away.
+- **Project name indicator** — the target project's name is shown in the sidebar (on
+  every page, with the full path on hover) and in the Files page header, so multiple
+  `ccc` instances are easy to tell apart.
+
+### Changed
+
+- **History layout** — the session list and detail pane are now independently
+  scrollable within the viewport instead of growing the whole page.
+- **Session list** — timestamps show as relative time ("2 hours ago", exact time on
+  hover).
+- Dropped the "Atlas" wording from the sidebar and loading screen; branding is now
+  simply **Compass for Claude Code**.
+
 ## [0.1.0] - 2026-06-01
 
 Initial release.

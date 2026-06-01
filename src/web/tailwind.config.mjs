@@ -35,7 +35,7 @@ export default {
         mono: ['"Geist Mono"', "ui-monospace", "Menlo", "monospace"],
       },
       letterSpacing: {
-        atlas: "0.18em",
+        caps: "0.18em",
       },
       boxShadow: {
         paper: "0 1px 0 rgb(var(--rule) / 0.6), 0 8px 24px -16px rgb(var(--shadow) / 0.18)",

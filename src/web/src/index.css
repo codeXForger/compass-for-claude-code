@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 /* =========================================================================
-   ATLAS — Compass for Claude Code
+   Compass for Claude Code
    A cartographic / editorial design system. Light = warm ivory parchment.
    Dark = deep ink-night. Brass as the signature accent. Distinctive type:
    Instrument Serif (display) · Geist (body) · Geist Mono (code).
@@ -213,12 +213,12 @@
     @apply field font-mono;
   }
   .label {
-    @apply mb-1.5 block text-[11px] font-medium uppercase tracking-atlas text-faint;
+    @apply mb-1.5 block text-[11px] font-medium uppercase tracking-caps text-faint;
   }
 
   /* ── Editorial type ── */
   .eyebrow {
-    @apply text-[11px] uppercase tracking-atlas text-faint;
+    @apply text-[11px] uppercase tracking-caps text-faint;
   }
   .chapter-num {
     @apply font-display text-2xl italic text-brass;

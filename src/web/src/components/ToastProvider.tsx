@@ -83,7 +83,7 @@ function ToastCard({ toast, onClose }: { toast: Toast; onClose: () => void }) {
         <span className={`dot mt-1.5 ${ok ? "bg-sage" : "bg-brick"}`} />
         <div className="min-w-0 flex-1">
           <div
-            className={`text-[11px] font-medium uppercase tracking-atlas ${
+            className={`text-[11px] font-medium uppercase tracking-caps ${
               ok ? "text-sage" : "text-brick"
             }`}
           >

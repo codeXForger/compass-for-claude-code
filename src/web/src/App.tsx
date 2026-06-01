@@ -15,6 +15,7 @@ import { History } from "./pages/History";
 import { Files } from "./pages/Files";
 import { GitStatus } from "./pages/GitStatus";
 import { StatusProvider, useStatus, type AuthState } from "./components/StatusProvider";
+import { projectNameFromCwd } from "./lib/api";
 import { SetupGate } from "./components/SetupGate";
 import { ThemeToggle } from "./components/ThemeProvider";
 import { ToastProvider } from "./components/ToastProvider";
@@ -58,6 +59,8 @@ function Shell() {
   const ready = phase === "ready";
   const needsInstall = phase === "needs-install";
   const claudeVer = fast?.claude.version?.replace(/\s*\(Claude Code\)$/, "") ?? "";
+  const cwd = fast?.paths.cwd ?? "";
+  const projectName = projectNameFromCwd(cwd);
 
   return (
     <div className="flex h-full">
@@ -70,7 +73,6 @@ function Shell() {
 
         <div className="relative px-5 pb-4 pt-6">
           <Link to="/" className="block">
-            <div className="eyebrow">An Atlas for</div>
             <div className="font-display text-3xl leading-none text-ink">
               Compass
             </div>
@@ -78,11 +80,24 @@ function Shell() {
               for Claude Code
             </div>
           </Link>
+          {projectName && (
+            <div
+              className="mt-3 flex items-center gap-2 rounded-md border border-rule bg-sunken px-2.5 py-1.5"
+              title={cwd}
+            >
+              <span aria-hidden className="text-faint">
+                ◉
+              </span>
+              <span className="truncate font-mono text-[12px] text-ink">
+                {projectName}
+              </span>
+            </div>
+          )}
           <div className="rule-dotted mt-4" />
         </div>
 
         <nav className="relative flex-1 overflow-y-auto px-3 pb-4">
-          <div className="mb-2 px-3 eyebrow">Atlas</div>
+          <div className="mb-2 px-3 eyebrow">Navigation</div>
           {NAV.map((item, i) => {
             const disabled = !ready;
             return (
