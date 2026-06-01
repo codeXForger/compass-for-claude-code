@@ -8,6 +8,7 @@ export interface ResolvedPaths {
   projectSettingsLocal: string;
   projectMcp: string;
   projectClaudemd: string;
+  projectClaudemdLocal: string;
   projectBackupsDir: string;
   userClaudeDir: string;
   userSettings: string;
@@ -35,6 +36,7 @@ export function resolvePaths(cwd: string): ResolvedPaths {
     projectSettingsLocal: resolve(projectClaudeDir, "settings.local.json"),
     projectMcp: resolve(cwd, ".mcp.json"),
     projectClaudemd: resolve(cwd, "CLAUDE.md"),
+    projectClaudemdLocal: resolve(cwd, "CLAUDE.local.md"),
     projectBackupsDir: resolve(projectClaudeDir, ".compass-backups"),
     userClaudeDir,
     userSettings: resolve(userClaudeDir, "settings.json"),

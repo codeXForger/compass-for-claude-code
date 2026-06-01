@@ -9,6 +9,8 @@ interface ClaudeMdResponse {
   content: string | null;
 }
 
+type Variant = "project" | "local";
+
 export function ClaudeMd() {
   const [data, setData] = useState<ClaudeMdResponse | null>(null);
   const [draft, setDraft] = useState("");
@@ -16,17 +18,26 @@ export function ClaudeMd() {
   const [generating, setGenerating] = useState(false);
   const [confirmGen, setConfirmGen] = useState(false);
   const [genOutput, setGenOutput] = useState("");
+  const [variant, setVariant] = useState<Variant>("project");
+
+  const endpoint = variant === "local" ? "/claudemd/local" : "/claudemd";
 
   function refresh() {
-    apiGet<ClaudeMdResponse>("/claudemd").then((d) => {
+    apiGet<ClaudeMdResponse>(endpoint).then((d) => {
       setData(d);
       setDraft(d.content ?? "");
+      setEditing(false);
     });
   }
-  useEffect(refresh, []);
+  // Reload whenever the active file (project vs local) changes.
+  useEffect(() => {
+    setData(null);
+    refresh();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [variant]);
 
   async function save() {
-    await apiPut("/claudemd", { content: draft });
+    await apiPut(endpoint, { content: draft });
     setEditing(false);
     refresh();
   }
@@ -80,21 +91,42 @@ export function ClaudeMd() {
 
   return (
     <div className="space-y-6">
+      <div className="inline-flex rounded-md border border-rule bg-surface p-1">
+        {(["project", "local"] as Variant[]).map((v) => (
+          <button
+            key={v}
+            onClick={() => setVariant(v)}
+            className={`tab ${variant === v ? "tab-active" : ""}`}
+            title={
+              v === "local" ? "CLAUDE.local.md — personal, gitignored" : undefined
+            }
+          >
+            {v === "local" ? "CLAUDE.local.md" : "CLAUDE.md"}
+          </button>
+        ))}
+      </div>
+
       <PageHeader
         chapter="II"
         eyebrow="Chapter · CLAUDE.md"
         title="The project's compass-note"
-        subtitle="instructions Claude reads on every run"
+        subtitle={
+          variant === "local"
+            ? "personal project instructions — gitignored, never shared"
+            : "instructions Claude reads on every run"
+        }
         meta={data.path}
         actions={
           data.exists && !editing && !generating ? (
             <div className="flex gap-2">
-              <button
-                className="btn-ghost"
-                onClick={() => setConfirmGen((v) => !v)}
-              >
-                Regenerate
-              </button>
+              {variant === "project" && (
+                <button
+                  className="btn-ghost"
+                  onClick={() => setConfirmGen((v) => !v)}
+                >
+                  Regenerate
+                </button>
+              )}
               <button className="btn-ghost" onClick={() => setEditing(true)}>
                 Edit
               </button>
@@ -120,24 +152,42 @@ export function ClaudeMd() {
         <div className="card space-y-4">
           <div className="flex items-center gap-2">
             <span className="dot bg-ember" />
-            <h2 className="font-display text-2xl text-ink">No CLAUDE.md yet</h2>
+            <h2 className="font-display text-2xl text-ink">
+              {variant === "local" ? "No CLAUDE.local.md yet" : "No CLAUDE.md yet"}
+            </h2>
           </div>
           <p className="text-sm text-muted">
-            Generate one by running the{" "}
-            <code className="font-mono text-ink">/init</code> command of the
-            local <code className="font-mono text-ink">claude</code> CLI, or
-            start with an empty file.
+            {variant === "local" ? (
+              <>
+                Personal, project-specific instructions that load alongside
+                CLAUDE.md but stay out of git. Start with an empty file.
+              </>
+            ) : (
+              <>
+                Generate one by running the{" "}
+                <code className="font-mono text-ink">/init</code> command of the
+                local <code className="font-mono text-ink">claude</code> CLI, or
+                start with an empty file.
+              </>
+            )}
           </p>
           <div className="flex gap-2">
-            <button className="btn-primary" onClick={() => setConfirmGen(true)}>
-              Generate
-            </button>
+            {variant === "project" && (
+              <button
+                className="btn-primary"
+                onClick={() => setConfirmGen(true)}
+              >
+                Generate
+              </button>
+            )}
             <button
-              className="btn-ghost"
+              className={variant === "local" ? "btn-primary" : "btn-ghost"}
               onClick={() => {
                 setEditing(true);
                 setData({ ...data, exists: true });
-                setDraft("# CLAUDE.md\n\n");
+                setDraft(
+                  variant === "local" ? "# CLAUDE.local.md\n\n" : "# CLAUDE.md\n\n",
+                );
               }}
             >
               Start blank

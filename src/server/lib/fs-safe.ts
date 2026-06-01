@@ -67,3 +67,20 @@ export function writeWithBackup(
   renameSync(tmp, path);
   return { backedUpTo };
 }
+
+/**
+ * Ensure `<cwd>/.gitignore` ignores `entry` (a path relative to cwd, e.g.
+ * `CLAUDE.local.md` or `.claude/settings.local.json`). Idempotent: appends the
+ * line only if no existing trimmed line already matches it. Used when writing
+ * "local" config files so they never get committed.
+ */
+export function ensureGitignored(cwd: string, entry: string): void {
+  const gitignore = resolve(cwd, ".gitignore");
+  const existing = existsSync(gitignore) ? readFileSync(gitignore, "utf8") : "";
+  const present = existing
+    .split(/\r?\n/)
+    .some((line) => line.trim() === entry);
+  if (present) return;
+  const prefix = existing.length && !existing.endsWith("\n") ? "\n" : "";
+  writeFileSync(gitignore, `${existing}${prefix}${entry}\n`, "utf8");
+}

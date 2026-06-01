@@ -3,14 +3,14 @@ import { apiGet, apiPost } from "../lib/api";
 import { PageHeader } from "../components/PageHeader";
 import { useToast } from "../components/ToastProvider";
 
-type Scope = "project" | "user";
+type Scope = "project" | "user" | "local";
 type Verdict = "allow" | "ask" | "deny" | "none";
 
 interface ToolEntry {
   name: string;
   description: string;
   pattern: string;
-  verdicts: { project: Verdict; user: Verdict };
+  verdicts: { project: Verdict; user: Verdict; local: Verdict };
 }
 
 interface ToolsResponse {
@@ -18,6 +18,7 @@ interface ToolsResponse {
   permissions: {
     project: { allow?: string[]; ask?: string[]; deny?: string[] };
     user: { allow?: string[]; ask?: string[]; deny?: string[] };
+    local: { allow?: string[]; ask?: string[]; deny?: string[] };
   };
 }
 
@@ -102,11 +103,12 @@ export function Tools() {
 
       <div className="flex flex-wrap items-center gap-3">
         <div className="inline-flex rounded-md border border-rule bg-surface p-1">
-          {(["project", "user"] as Scope[]).map((s) => (
+          {(["project", "user", "local"] as Scope[]).map((s) => (
             <button
               key={s}
               onClick={() => setScope(s)}
               className={`tab capitalize ${scope === s ? "tab-active" : ""}`}
+              title={s === "local" ? ".claude/settings.local.json" : undefined}
             >
               {s}
             </button>
@@ -165,6 +167,12 @@ export function Tools() {
                         user:{" "}
                         <span className={verdictTextClass(t.verdicts.user)}>
                           {t.verdicts.user}
+                        </span>
+                      </span>
+                      <span>
+                        local:{" "}
+                        <span className={verdictTextClass(t.verdicts.local)}>
+                          {t.verdicts.local}
                         </span>
                       </span>
                     </div>

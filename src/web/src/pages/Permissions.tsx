@@ -3,7 +3,7 @@ import { apiGet, apiPut } from "../lib/api";
 import { PageHeader } from "../components/PageHeader";
 import { ActionButton } from "../components/ActionButton";
 
-type Scope = "project" | "user";
+type Scope = "project" | "user" | "local";
 
 interface PermissionsValue {
   allow?: string[];
@@ -12,18 +12,22 @@ interface PermissionsValue {
 }
 
 export function Permissions() {
-  const [data, setData] = useState<
-    { project: PermissionsValue; user: PermissionsValue } | null
-  >(null);
+  const [data, setData] = useState<{
+    project: PermissionsValue;
+    user: PermissionsValue;
+    local: PermissionsValue;
+  } | null>(null);
   const [scope, setScope] = useState<Scope>("project");
   const [allow, setAllow] = useState("");
   const [deny, setDeny] = useState("");
   const [ask, setAsk] = useState("");
 
   function refresh() {
-    apiGet<{ project: PermissionsValue; user: PermissionsValue }>(
-      "/permissions",
-    ).then((d) => {
+    apiGet<{
+      project: PermissionsValue;
+      user: PermissionsValue;
+      local: PermissionsValue;
+    }>("/permissions").then((d) => {
       setData(d);
       const v = d[scope] ?? {};
       setAllow((v.allow ?? []).join("\n"));
@@ -71,11 +75,12 @@ export function Permissions() {
       />
 
       <div className="inline-flex rounded-md border border-rule bg-surface p-1">
-        {(["project", "user"] as Scope[]).map((s) => (
+        {(["project", "user", "local"] as Scope[]).map((s) => (
           <button
             key={s}
             onClick={() => setScope(s)}
             className={`tab capitalize ${scope === s ? "tab-active" : ""}`}
+            title={s === "local" ? ".claude/settings.local.json" : undefined}
           >
             {s}
           </button>

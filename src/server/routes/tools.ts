@@ -1,9 +1,9 @@
 import { Hono } from "hono";
 import type { ServerContext } from "../index.js";
-import { readJsonSafe, writeWithBackup } from "../lib/fs-safe.js";
+import { ensureGitignored, readJsonSafe, writeWithBackup } from "../lib/fs-safe.js";
 import { resolvePaths } from "../lib/paths.js";
 
-type Scope = "project" | "user";
+type Scope = "project" | "user" | "local";
 type Verdict = "allow" | "ask" | "deny" | "none";
 
 interface Permissions {
@@ -53,11 +53,16 @@ function verdictFor(perms: Permissions, tool: ToolEntry): Verdict {
   return "none";
 }
 
-function loadPermissions(ctx: ServerContext, scope: Scope): Permissions {
+function settingsPathFor(ctx: ServerContext, scope: Scope): string {
   const p = resolvePaths(ctx.cwd);
-  const path = scope === "project" ? p.projectSettings : p.userSettings;
+  if (scope === "local") return p.projectSettingsLocal;
+  return scope === "project" ? p.projectSettings : p.userSettings;
+}
+
+function loadPermissions(ctx: ServerContext, scope: Scope): Permissions {
   return (
-    readJsonSafe<{ permissions?: Permissions }>(path)?.permissions ?? {}
+    readJsonSafe<{ permissions?: Permissions }>(settingsPathFor(ctx, scope))
+      ?.permissions ?? {}
   );
 }
 
@@ -73,18 +78,20 @@ export function toolsRoute(ctx: ServerContext) {
 
     const projectPerms = loadPermissions(ctx, "project");
     const userPerms = loadPermissions(ctx, "user");
+    const localPerms = loadPermissions(ctx, "local");
 
     const tools = builtIn.map((t) => ({
       ...t,
       verdicts: {
         project: verdictFor(projectPerms, t),
         user: verdictFor(userPerms, t),
+        local: verdictFor(localPerms, t),
       },
     }));
 
     return c.json({
       tools,
-      permissions: { project: projectPerms, user: userPerms },
+      permissions: { project: projectPerms, user: userPerms, local: localPerms },
     });
   });
 
@@ -96,15 +103,14 @@ export function toolsRoute(ctx: ServerContext) {
       pattern: string;
       verdict: Verdict;
     }>();
-    if (!["project", "user"].includes(body.scope))
+    if (!["project", "user", "local"].includes(body.scope))
       return c.json({ error: "invalid scope" }, 400);
     if (!body.pattern) return c.json({ error: "pattern required" }, 400);
     if (!["allow", "ask", "deny", "none"].includes(body.verdict))
       return c.json({ error: "invalid verdict" }, 400);
 
     const paths = resolvePaths(ctx.cwd);
-    const path =
-      body.scope === "project" ? paths.projectSettings : paths.userSettings;
+    const path = settingsPathFor(ctx, body.scope);
     const current =
       readJsonSafe<Record<string, unknown>>(path) ??
       ({} as Record<string, unknown>);
@@ -134,6 +140,8 @@ export function toolsRoute(ctx: ServerContext) {
       JSON.stringify(current, null, 2) + "\n",
       paths.projectBackupsDir,
     );
+    if (body.scope === "local")
+      ensureGitignored(ctx.cwd, ".claude/settings.local.json");
     return c.json({ ok: true, path, backedUpTo });
   });
 

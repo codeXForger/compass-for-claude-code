@@ -3,7 +3,7 @@ import { apiGet, apiPut } from "../lib/api";
 import { PageHeader } from "../components/PageHeader";
 import { ActionButton, SkipError } from "../components/ActionButton";
 
-type Scope = "project" | "user";
+type Scope = "project" | "user" | "local";
 type Mode = "form" | "json";
 
 interface HookCommand {
@@ -128,9 +128,11 @@ function prune(config: HooksConfig): HooksConfig {
 }
 
 export function Hooks() {
-  const [data, setData] = useState<{ project: unknown; user: unknown } | null>(
-    null,
-  );
+  const [data, setData] = useState<{
+    project: unknown;
+    user: unknown;
+    local: unknown;
+  } | null>(null);
   const [scope, setScope] = useState<Scope>("project");
   const [mode, setMode] = useState<Mode>("form");
   const [config, setConfig] = useState<HooksConfig>({});
@@ -148,7 +150,9 @@ export function Hooks() {
   const [editText, setEditText] = useState("");
 
   function refresh() {
-    return apiGet<{ project: unknown; user: unknown }>("/hooks").then(setData);
+    return apiGet<{ project: unknown; user: unknown; local: unknown }>(
+      "/hooks",
+    ).then(setData);
   }
   useEffect(() => {
     refresh();
@@ -254,11 +258,12 @@ export function Hooks() {
       <div className="flex flex-wrap items-center gap-3">
         {/* Scope tabs */}
         <div className="inline-flex rounded-md border border-rule bg-surface p-1">
-          {(["project", "user"] as Scope[]).map((s) => (
+          {(["project", "user", "local"] as Scope[]).map((s) => (
             <button
               key={s}
               onClick={() => setScope(s)}
               className={`tab capitalize ${scope === s ? "tab-active" : ""}`}
+              title={s === "local" ? ".claude/settings.local.json" : undefined}
             >
               {s}
             </button>
