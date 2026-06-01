@@ -1,6 +1,6 @@
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { Command } from "commander";
 import getPort from "get-port";
 import open from "open";
@@ -8,6 +8,18 @@ import { startServer } from "./server/index.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+
+// package.json sits one level up from both src/cli.ts (dev) and dist/cli.js (build)
+function readVersion(): string {
+  try {
+    const pkg = JSON.parse(
+      readFileSync(resolve(__dirname, "../package.json"), "utf8"),
+    );
+    return pkg.version ?? "0.0.0";
+  } catch {
+    return "0.0.0";
+  }
+}
 
 const program = new Command();
 
@@ -22,7 +34,7 @@ program
     "-c, --cwd <path>",
     "project directory to scope to (default: process.cwd())",
   )
-  .version("0.1.0")
+  .version(readVersion())
   .action(async (opts) => {
     const cwd = resolve(opts.cwd ?? process.cwd());
     if (!existsSync(cwd)) {
